@@ -73,7 +73,7 @@ function AuthScreen({ onAuthed, sfx }) {
       </section>
 
       <style jsx global>{globalCss}</style>
-      <style jsx>{mcCss}</style>
+      <style jsx global>{mcCss}</style>
     </main>
   );
 }
@@ -186,7 +186,7 @@ export default function Home() {
   const reveal = () => { if (!show) { setShow(true); sfx.flip(); } };
 
   if (!authLoaded) return <main className="mc"><p className="boot">⛏ Loading world...</p>
-    <style jsx global>{globalCss}</style><style jsx>{mcCss}</style></main>;
+    <style jsx global>{globalCss}</style><style jsx global>{mcCss}</style></main>;
   if (!user) return <AuthScreen onAuthed={setUser} sfx={sfx} />;
 
   const card = cards[i];
@@ -289,7 +289,7 @@ export default function Home() {
       </section>
 
       <style jsx global>{globalCss}</style>
-      <style jsx>{mcCss}</style>
+      <style jsx global>{mcCss}</style>
     </main>
   );
 }
