@@ -5,7 +5,8 @@ spaced-repetition engine (SM-2) schedules reviews. XP gamifies retention.
 
 ## Stack
 - **Next.js** (React frontend + API routes as backend)
-- **SQLite** via Node's built-in `node:sqlite` (relational; same SQL model I'd deploy on **PostgreSQL**)
+- **libSQL / Turso** — SQLite-compatible, but networked so it runs on serverless
+  hosts (Vercel). Falls back to a local SQLite file in dev. Same SQL model I'd deploy on **PostgreSQL**.
 - **Groq API (Llama)** for flashcard generation
 
 ## Architecture
@@ -13,7 +14,7 @@ spaced-repetition engine (SM-2) schedules reviews. XP gamifies retention.
 Browser (React)  ->  Next.js API routes  ->  Groq LLM (generate cards)
                           |
                           v
-                  SQLite: users -> decks -> cards -> reviews
+                  libSQL/Turso: users -> decks -> cards -> reviews
 ```
 
 ## Core pieces (interview map)
@@ -37,16 +38,15 @@ Demo account (seeded): **demo@studycraft.app** / **demo1234**
 ## Run
 ```bash
 npm install
-cp .env.local.example .env.local   # optional: add GROQ_API_KEY
+cp .env.local.example .env.local   # optional: add GROQ_API_KEY (+ Turso vars for hosted DB)
 npm run dev                         # http://localhost:3000
 ```
-Requires **Node 22+** (uses the built-in `node:sqlite`).
+With no `TURSO_*` vars set, dev uses a local `file:studycraft.db` automatically.
 
 ## Deploy
-See **[DEPLOY.md](DEPLOY.md)**. Uses a SQLite file, so deploy to a host with a
-persistent disk (Railway / Render / Fly.io) — **not** Vercel/Netlify (serverless
-filesystems are ephemeral and would lose all data). Set `GROQ_API_KEY`,
-`DB_PATH=/data/studycraft.db`, and `NODE_ENV=production`.
+See **[DEPLOY.md](DEPLOY.md)**. Runs on **Vercel** (or any serverless/persistent
+host) because the DB is hosted **Turso**, not a local file. Set `GROQ_API_KEY`,
+`TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, and `NODE_ENV=production`.
 
 ## Roadmap (honest, not yet built)
 - Subscription billing (schema-ready; needs a real Stripe/Razorpay account + public webhook)
